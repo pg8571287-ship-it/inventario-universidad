@@ -23,4 +23,6 @@ public interface ReservaService {
     boolean equipoDisponible(
             Reserva reserva
     );
+
+    
 }
