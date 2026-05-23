@@ -1,0 +1,131 @@
+<div class="tabla-container">
+
+    <!-- TITULO -->
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+
+        <div>
+
+            <h2>
+
+                Reservas registradas
+
+            </h2>
+
+            <p>
+
+                Gestión de reservas del sistema
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- TABLA -->
+
+    <table class="table table-hover align-middle">
+
+        <thead class="table-dark">
+
+<tr>
+
+    <th>ID</th>
+
+    <th>Usuario</th>
+
+    <th>Equipo</th>
+
+    <th>Fecha</th>
+
+    <th>Hora Inicio</th>
+
+    <th>Hora Fin</th>
+
+    <th>Estado</th>
+
+    <th>Acciones</th>
+
+</tr>
+
+</thead>
+
+        <tbody>
+
+<tr th:each="reserva : ${reservas}">
+
+    <td th:text="${reserva.id}"></td>
+
+    <td th:text="${reserva.usuario.nombre}"></td>
+
+    <td th:text="${reserva.equipo.categoria}"></td>
+
+    <td th:text="${reserva.fechaReserva}"></td>
+
+    <td th:text="${reserva.horaInicio}"></td>
+
+    <td th:text="${reserva.horaFin}"></td>
+
+    <!-- ESTADO -->
+
+    <td>
+
+        <span class="badge bg-warning"
+
+              th:if="${reserva.estado == 'PENDIENTE'}">
+
+            PENDIENTE
+
+        </span>
+
+        <span class="badge bg-success"
+
+              th:if="${reserva.estado == 'APROBADA'}">
+
+            APROBADA
+
+        </span>
+
+        <span class="badge bg-danger"
+
+              th:if="${reserva.estado == 'RECHAZADA'}">
+
+            RECHAZADA
+
+        </span>
+
+    </td>
+
+    <!-- BOTONES -->
+
+    <td>
+
+        <!-- APROBAR -->
+
+        <a th:href="@{/admin/reservas/aprobar/{id}(id=${reserva.id})}"
+
+           class="btn btn-success btn-sm">
+
+            <i class="fa-solid fa-check"></i>
+
+        </a>
+
+        <!-- RECHAZAR -->
+
+        <a th:href="@{/admin/reservas/rechazar/{id}(id=${reserva.id})}"
+
+           class="btn btn-danger btn-sm">
+
+            <i class="fa-solid fa-xmark"></i>
+
+        </a>
+
+    </td>
+
+</tr>
+
+</tbody>
+
+    </table>
+
+</div>

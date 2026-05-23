@@ -1,0 +1,99 @@
+<div class="row">
+
+    <!-- EQUIPOS -->
+
+    <div class="col-md-3">
+
+        <div class="card-resumen">
+
+            <i class="fa-solid fa-laptop"></i>
+
+            <h3>
+
+                <span th:text="${totalEquipos}"></span>
+
+            </h3>
+
+            <p>
+
+                Equipos registrados
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- DISPONIBLES -->
+
+    <div class="col-md-3">
+
+        <div class="card-resumen">
+
+            <i class="fa-solid fa-circle-check"></i>
+
+            <h3>
+
+                <span th:text="${equiposDisponibles}"></span>
+
+            </h3>
+
+            <p>
+
+                Equipos disponibles
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- RESERVAS -->
+
+    <div class="col-md-3">
+
+        <div class="card-resumen">
+
+            <i class="fa-solid fa-calendar-check"></i>
+
+            <h3>
+
+                <span th:text="${totalReservas}"></span>
+
+            </h3>
+
+            <p>
+
+                Reservas activas
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- USUARIOS -->
+
+    <div class="col-md-3">
+
+        <div class="card-resumen">
+
+            <i class="fa-solid fa-users"></i>
+
+            <h3>
+
+                <span th:text="${totalUsuarios}"></span>
+
+            </h3>
+
+            <p>
+
+                Usuarios registrados
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
