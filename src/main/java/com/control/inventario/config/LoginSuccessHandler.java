@@ -5,13 +5,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.GrantedAuthority;
 
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.Collection;
 
 @Component
 public class LoginSuccessHandler
@@ -19,24 +20,31 @@ public class LoginSuccessHandler
 
     @Override
     public void onAuthenticationSuccess(
+
             HttpServletRequest request,
+
             HttpServletResponse response,
+
             Authentication authentication)
 
             throws IOException, ServletException {
 
-        // SI ES ADMIN
-        if (authentication.getAuthorities()
-                .contains(new SimpleGrantedAuthority("ADMIN"))) {
+        Collection<? extends GrantedAuthority> authorities =
+                authentication.getAuthorities();
 
-            response.sendRedirect("/admin/dashboard");
+        for (GrantedAuthority authority : authorities) {
 
+            // ADMIN
+            if (authority.getAuthority()
+                    .equals("ROLE_ADMIN")) {
+
+                response.sendRedirect("/admin/dashboard");
+
+                return;
+            }
         }
 
-        // SI ES USUARIO NORMAL
-        else {
-
-            response.sendRedirect("/dashboard");
-        }
+        // USUARIO NORMAL
+        response.sendRedirect("/dashboard");
     }
 }
