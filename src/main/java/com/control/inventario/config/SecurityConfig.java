@@ -53,7 +53,7 @@ public class SecurityConfig {
 
                 // SOLO ADMIN
                 .requestMatchers("/admin/**")
-                .hasAuthority("ADMIN")
+.hasRole("ADMIN")
 
                 // CUALQUIER OTRA RUTA REQUIERE LOGIN
                 .anyRequest()
