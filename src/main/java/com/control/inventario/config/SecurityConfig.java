@@ -15,6 +15,15 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 @Configuration
 public class SecurityConfig {
 
+    private final LoginSuccessHandler loginSuccessHandler;
+
+    // CONSTRUCTOR
+    public SecurityConfig(
+            LoginSuccessHandler loginSuccessHandler) {
+
+        this.loginSuccessHandler = loginSuccessHandler;
+    }
+
     // ENCRIPTAR PASSWORD
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -22,7 +31,7 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // CONTROL DE SEGURIDAD
+    // CONFIGURACION SEGURIDAD
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
@@ -46,7 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/admin/**")
                 .hasAuthority("ADMIN")
 
-                // TODO LO DEMAS REQUIERE LOGIN
+                // CUALQUIER OTRA RUTA REQUIERE LOGIN
                 .anyRequest()
                 .authenticated()
             )
@@ -56,8 +65,10 @@ public class SecurityConfig {
 
                 .loginPage("/login")
 
-                .defaultSuccessUrl("/dashboard", true)
+                // REDIRECCION SEGUN ROL
+                .successHandler(loginSuccessHandler)
 
+                // ERROR LOGIN
                 .failureUrl("/login?error")
 
                 .permitAll()
@@ -83,10 +94,10 @@ public class SecurityConfig {
                 // SOLO 1 SESION POR USUARIO
                 .maximumSessions(1)
 
-                // BLOQUEA NUEVO LOGIN
+                // IMPIDE LOGIN EN OTRO DISPOSITIVO
                 .maxSessionsPreventsLogin(true)
 
-                // REDIRECCION SI SESION EXPIRA
+                // SI LA SESION EXPIRA
                 .expiredUrl("/login?expired")
             );
 

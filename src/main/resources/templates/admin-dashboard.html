@@ -225,7 +225,33 @@
                 margin-left:0;
             }
         }
+.logout-btn {
 
+    width: 100%;
+
+    background: none;
+
+    border: none;
+
+    color: white;
+
+    text-align: left;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    cursor: pointer;
+
+    font-size: 18px;
+
+    transition: 0.3s;
+}
+
+.logout-btn:hover {
+
+    background: #2563eb;
+}
     </style>
 
 </head>
@@ -312,13 +338,16 @@
 
         <!-- LOGOUT -->
 
-        <a href="/logout">
+      <form th:action="@{/logout}" method="post">
 
-            <i class="fa-solid fa-right-from-bracket"></i>
+    <button type="submit" class="menu-link logout-btn">
 
-            Cerrar sesión
+        <i class="fas fa-sign-out-alt"></i>
+        Cerrar sesión
 
-        </a>
+    </button>
+
+</form>
 
     </div>
 
