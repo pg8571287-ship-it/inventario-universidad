@@ -49,78 +49,42 @@ public class SecurityConfig {
     }
 
     // SEGURIDAD
-    @Bean
-    public SecurityFilterChain securityFilterChain(
+   @Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-            HttpSecurity http
+    http
+        .authorizeHttpRequests(auth -> auth
+            .requestMatchers(
+                    "/css/**",
+                    "/js/**",
+                    "/img/**",
+                    "/registro",
+                    "/guardar-usuario"
+            ).permitAll()
 
-    ) throws Exception {
+            .requestMatchers("/admin/**")
+            .hasAuthority("ADMIN")
 
-        http
+            .anyRequest()
+            .authenticated()
+        )
 
-                // CSRF
-                .csrf(csrf -> csrf.disable())
+        .formLogin(form -> form
+            .loginPage("/login")
+            .defaultSuccessUrl("/dashboard", true)
+            .permitAll()
+        )
 
-                // RUTAS
-                .authorizeHttpRequests(auth -> auth
+        .logout(logout -> logout
+            .logoutSuccessUrl("/login?logout")
+            .permitAll()
+        )
 
-                        // PUBLICAS
-                        .requestMatchers(
+        .sessionManagement(session -> session
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(true)
+        );
 
-                                "/login",
-                                "/registro",
-                                "/guardar-usuario",
-
-                                "/css/**",
-                                "/js/**",
-                                "/img/**"
-
-                        ).permitAll()
-
-                        // ADMIN
-                        .requestMatchers(
-
-                                "/admin/**"
-
-                        ).hasRole("ADMIN")
-
-                        // USUARIO
-                        .requestMatchers(
-
-                                "/dashboard",
-                                "/reservar",
-                                "/mis-reservas"
-
-                        ).hasRole("USUARIO")
-
-                        // RESTO
-                        .anyRequest()
-
-                        .authenticated()
-                )
-
-                // LOGIN
-                .formLogin(form -> form
-
-                        .loginPage("/login")
-
-                        .loginProcessingUrl("/login")
-
-                        .successHandler(customSuccessHandler)
-
-                        .permitAll()
-                )
-
-                // LOGOUT
-                .logout(logout -> logout
-
-                        .logoutUrl("/logout")
-
-                        .logoutSuccessUrl("/login?logout")
-
-                        .permitAll()
-                );
-
-        return http.build();
-    }
+    return http.build();
+}
 }
