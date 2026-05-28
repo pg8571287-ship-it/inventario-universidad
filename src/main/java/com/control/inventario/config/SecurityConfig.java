@@ -1,5 +1,7 @@
 package com.control.inventario.config;
 
+import com.control.inventario.service.CustomUserDetailsService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,11 +19,20 @@ public class SecurityConfig {
 
     private final LoginSuccessHandler loginSuccessHandler;
 
+    private final CustomUserDetailsService customUserDetailsService;
+
     // CONSTRUCTOR
     public SecurityConfig(
-            LoginSuccessHandler loginSuccessHandler) {
+
+            LoginSuccessHandler loginSuccessHandler,
+
+            CustomUserDetailsService customUserDetailsService
+    ) {
 
         this.loginSuccessHandler = loginSuccessHandler;
+
+        this.customUserDetailsService =
+                customUserDetailsService;
     }
 
     // ENCRIPTAR PASSWORD
@@ -31,17 +42,20 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // CONFIGURACION SEGURIDAD
+    // SEGURIDAD
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http) throws Exception {
 
         http
 
+            // USAR SERVICIO PERSONALIZADO
+            .userDetailsService(customUserDetailsService)
+
             // AUTORIZACIONES
             .authorizeHttpRequests(auth -> auth
 
-                // RECURSOS PUBLICOS
+                // RUTAS PUBLICAS
                 .requestMatchers(
                         "/css/**",
                         "/js/**",
@@ -53,9 +67,9 @@ public class SecurityConfig {
 
                 // SOLO ADMIN
                 .requestMatchers("/admin/**")
-.hasRole("ADMIN")
+                .hasRole("ADMIN")
 
-                // CUALQUIER OTRA RUTA REQUIERE LOGIN
+                // CUALQUIER OTRA REQUIERE LOGIN
                 .anyRequest()
                 .authenticated()
             )
@@ -91,14 +105,14 @@ public class SecurityConfig {
             // CONTROL DE SESIONES
             .sessionManagement(session -> session
 
-                // SOLO 1 SESION POR USUARIO
+                // SOLO UNA SESION
                 .maximumSessions(1)
 
                 // IMPIDE LOGIN EN OTRO DISPOSITIVO
                 .maxSessionsPreventsLogin(true)
 
-                // SI LA SESION EXPIRA
-                .expiredUrl("/login?expired")
+                // SI EXPIRA SESION
+                .expiredUrl("/login?multiple")
             );
 
         return http.build();
@@ -106,7 +120,8 @@ public class SecurityConfig {
 
     // CONTROLADOR DE EVENTOS DE SESION
     @Bean
-    public HttpSessionEventPublisher httpSessionEventPublisher() {
+    public HttpSessionEventPublisher
+    httpSessionEventPublisher() {
 
         return new HttpSessionEventPublisher();
     }
